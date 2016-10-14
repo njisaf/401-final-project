@@ -23,7 +23,7 @@ statusRouter.post('/api/hospital/:hospitalID/status', bearerAuth, jsonParser, fu
   Hospital.findById(req.params.hospitalID)
   .catch(err => Promise.reject(createError(404, err.message)))
   .then(hospital => {
-    if(hospital === null) return Promise.reject(createError(404, 'Hospital does not exist'));
+    if(!hospital) return Promise.reject(createError(404, 'Hospital does not exist'));
     console.log('NO HOSPITAL ', hospital);
     new Status(req.body).save()
     .then(status => res.json(status));
