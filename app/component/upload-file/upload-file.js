@@ -10,7 +10,7 @@ module.exports = {
   },
 };
 
-function UploadFileController($log){
+function UploadFileController($log, fileService){
   $log.debug('Initializing uploadFileCtrl');
 
   this.file = {};
@@ -18,13 +18,24 @@ function UploadFileController($log){
   this.uploadStatusFile = function(){
     console.log('UploadFileController.uploadStatusFile');
     this.status.file = this.file.file;
+    console.log('this.status.file', this.status.file, this.status);
 
-    // fileService.uploadStatusFile(this.status._id, this.status.file);
-
-    console.log('this.status.file', this.status.file);
-    this.file.file = null;
-
+    return fileService.uploadStatusFile(this.status._id, this.file.file)
+    .then(() => {
+      this.file.file = null;
+    });
   };
+
+  // this.uploadStatusFile = function(){
+  //   console.log('UploadFileController.uploadStatusFile');
+  //   this.status.file = this.file.file;
+  //
+  //   console.log('this.status.file', this.status.file);
+  //   this.file.file = null;
+  //
+  // };
+
+
 
 
 }

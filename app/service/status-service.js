@@ -41,12 +41,12 @@ function statusService($q, $log, $http, $window, authService, hospitalService, f
       // $log.log('Status successfully instantiated');
       let status = res.data;
       service.statuses.unshift(status);
-      $log.log('HERES OUR STATUSES', service.statuses);
-      fileService.uploadStatusFile(status._id, fileData)
-      .then(res => {
-        $log.log('HERES DA RES', res);
-        status.fileURI = res.fileURI;
-      });
+      // $log.log('HERES OUR STATUSES', service.statuses);
+      // fileService.uploadStatusFile(status._id, fileData)
+      // .then(res => {
+      //   $log.log('HERES DA RES', res);
+      //   status.fileURI = res.fileURI;
+      // });
       return status;
     })
     .catch(err => {
