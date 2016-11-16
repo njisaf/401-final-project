@@ -1,14 +1,16 @@
 'use strict';
 
-module.exports = ['$q', '$log', 'Upload', '$http', '$window', 'authService', 'hospitalService', 'fileService', statusService];
+module.exports = ['$q', '$log', 'Upload', '$http', '$window', 'authService', 'hospitalService', statusService];
 
-function statusService($q, $log, Upload, $http, $window, authService, hospitalService, fileService) {
+function statusService($q, $log, Upload, $http, $window, authService, hospitalService) {
   $log.debug('Initializing statusService');
 
   let service = {};
 
   service.statuses = [];
   service.fileURI = null;
+
+  //creating status with an attached file
   service.createFileStatus = function(status){
     $log.debug('statusService.createFileStatus hit');
 
@@ -71,11 +73,6 @@ function statusService($q, $log, Upload, $http, $window, authService, hospitalSe
       let status = res.data;
       service.statuses.unshift(status);
       $log.log('HERES OUR STATUSES', service.statuses);
-      fileService.uploadStatusFile(status._id, fileData)
-      .then(res => {
-        $log.log('HERES DA RES', res);
-        status.fileURI = res.fileURI;
-      });
       return status;
     })
     .catch(err => {
@@ -109,7 +106,7 @@ function statusService($q, $log, Upload, $http, $window, authService, hospitalSe
     });
   };
 
-  service.updateService = function(statusID, status) {
+  service.updateStatus = function(statusID, status) {
     $log.debug('statusService.updateStatus()');
 
     return authService.getToken()
@@ -155,7 +152,9 @@ function statusService($q, $log, Upload, $http, $window, authService, hospitalSe
     .then(res => {
       $log.log('Statuses fetched', res.data);
       service.statuses = res.data;
-      return service.statuses;
+      return service.statuses.sort((a, b) => {
+        return (new Date(b.created)) - (new Date(a.created));
+      });
     })
     .catch(err => {
       $log.error(err.message);
